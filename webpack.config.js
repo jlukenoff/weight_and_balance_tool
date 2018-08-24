@@ -12,6 +12,7 @@ module.exports = {
   },
   devtool: 'source-map',
   resolve: { extensions: ['.js', '.jsx'] },
+  mode: 'development',
   module: {
     rules: [
       {
@@ -31,7 +32,7 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/,
         query: {
-          presets: ['env', 'react', 'airbnb'],
+          presets: ['env', 'react', 'stage-2', 'airbnb'],
         },
       },
     ],
