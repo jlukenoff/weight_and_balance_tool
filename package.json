@@ -1,5 +1,5 @@
 {
-  "name": "weigth_balance",
+  "name": "weight_balance",
   "version": "1.0.0",
   "description": "",
   "main": "webpack.config.js",
@@ -8,7 +8,8 @@
     "start": "node server/index.js",
     "start-dev": "nodemon server/index.js",
     "build": "webpack --mode=production",
-    "react-dev": "webpack --watch"
+    "react-dev": "webpack --watch",
+    "seed-db": "node ./utils/generate_data.js && node ./utils/load_data.js"
   },
   "keywords": [],
   "author": "",
@@ -29,7 +30,10 @@
   },
   "dependencies": {
     "express": "^4.16.3",
+    "faker": "^4.1.0",
+    "mongoose": "^5.2.9",
     "nodemon": "^1.18.3",
+    "pg": "^7.4.3",
     "react": "^16.4.2",
     "react-dom": "^16.4.2"
   }
