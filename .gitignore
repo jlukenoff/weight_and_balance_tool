@@ -3,3 +3,7 @@ node_modules
 
 #data_files
 *.csv
+
+#bundles
+public/dist/bundle.js
+public/dist/bundle.js.map
