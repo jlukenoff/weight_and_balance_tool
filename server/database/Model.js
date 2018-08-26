@@ -2,7 +2,7 @@ const { mongoose } = require('./index');
 
 const aircraftSchema = new mongoose.Schema({
   id: Number,
-  tailNumber: Number,
+  tailNumber: String,
   make: String,
   model: String,
   year: Number,

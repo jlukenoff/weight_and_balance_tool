@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import Chart from './Components/Chart/Chart';
 import WeightBalanceTable from './Components/WeightBalanceTable/WeightBalanceTable';
+import PlaneSelect from './Components/PlaneSelect/PlaneSelect';
 
 class App extends Component {
   constructor(props) {
@@ -28,8 +30,34 @@ class App extends Component {
       currentFuelWeight: 0,
       currentCargo1Weight: 0,
       currentCargo2Weight: 0,
+      allPlanesByMake: {},
+      currentMake: '',
+      currentModel: '',
+      currentTailNumber: '',
     };
     this.update = this.update.bind(this);
+    this.getAll = this.getAll.bind(this);
+    this.handlePlaneSelect = this.handlePlaneSelect.bind(this);
+  }
+
+  componentDidMount() {
+    this.getAll();
+  }
+
+  getAll() {
+    fetch('/api/all')
+      .then(chunk => chunk.json())
+      .then((res) => {
+        const allPlanesByMake = res.reduce((makes, plane) => {
+          if (makes[plane.make] === undefined) {
+            makes[plane.make] = [plane];
+          } else {
+            makes[plane.make].push(plane);
+          }
+          return makes;
+        }, {});
+        this.setState({ allPlanesByMake });
+      }).catch(err => console.error(`error parsing response ${err}`));
   }
 
   update(event, key) {
@@ -39,9 +67,17 @@ class App extends Component {
     this.setState({ ...newState });
   }
 
+  handlePlaneSelect(e, property) {
+    e.preventDefault();
+    const newState = {...this.state};
+    newState[property] = e.target.value;
+    this.setState({...newState});
+  }
+
   render() {
     return (
       <div>
+        <PlaneSelect {...this.state} handleSelect={this.handlePlaneSelect} />
         <WeightBalanceTable
           {...this.state}
           update={this.update}
@@ -52,4 +88,7 @@ class App extends Component {
   }
 }
 
-window.App = App;
+ReactDOM.render(
+  React.createElement(App),
+  document.getElementById('WeightAndBalance'),
+);
