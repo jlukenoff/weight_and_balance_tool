@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Chart from './Components/Chart/Chart';
 import WeightBalanceTable from './Components/WeightBalanceTable/WeightBalanceTable';
 import PlaneSelect from './Components/PlaneSelect/PlaneSelect';
+import Message from './Components/Message/Message';
 
 class App extends Component {
   constructor(props) {
@@ -35,11 +36,13 @@ class App extends Component {
       currentMake: '',
       currentModel: '',
       currentTailNumber: '',
+      exceedsBoundary: false,
     };
     this.update = this.update.bind(this);
     this.getAll = this.getAll.bind(this);
     this.handlePlaneSelect = this.handlePlaneSelect.bind(this);
     this.getPlaneByTailNumber = this.getPlaneByTailNumber.bind(this);
+    this.toggleMessage = this.toggleMessage.bind(this);
   }
 
   componentDidMount() {
@@ -92,6 +95,12 @@ class App extends Component {
     }
   }
 
+  toggleMessage() {
+    let { exceedsBoundary } = this.state;
+    exceedsBoundary = !exceedsBoundary;
+    this.setState({ exceedsBoundary });
+  }
+
   render() {
     const {
       currrentFrontSeatWeight,
@@ -115,6 +124,7 @@ class App extends Component {
       cargo2Moment: Math.ceil(currentCargo2Weight * cargoPosition2),
       fuelMoment: Math.ceil(currentFuelWeight * fuelPosition),
     };
+
     return (
       <div>
         <PlaneSelect {...this.state} handleSelect={this.handlePlaneSelect} />
@@ -123,9 +133,14 @@ class App extends Component {
           {...CoGData}
           update={this.update}
         />
+        <Message
+          {...this.state}
+          {...CoGData}
+        />
         <Chart
           {...this.state}
           {...CoGData}
+          toggleMessage={this.toggleMessage}
         />
       </div>
     );

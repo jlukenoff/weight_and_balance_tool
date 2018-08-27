@@ -23,6 +23,8 @@ const Chart = (props) => {
     rearSeatsMoment,
     cargo1Moment,
     cargo2Moment,
+    exceedsBoundary,
+    toggleMessage,
   } = props;
 
   const renderCoGByFuelWeight = fuelWeight => (
@@ -41,6 +43,13 @@ const Chart = (props) => {
     }
     return output;
   };
+  const flightPlan = renderCoGFlight();
+
+  if ((!exceedsBoundary && (flightPlan[flightPlan.length - 1] > maxCoG || flightPlan[0] > maxCoG))
+    || (exceedsBoundary && (flightPlan[flightPlan.length - 1] < maxCoG || flightPlan[0] < maxCoG))
+  ) {
+    toggleMessage();
+  }
   return (
     <div className={styles.Chart} id="CoG-Graph">
       <Line
@@ -51,7 +60,7 @@ const Chart = (props) => {
           datasets: [
             {
               label: 'Current CoG',
-              data: renderCoGFlight(),
+              data: flightPlan,
               fill: false,
               borderColor: 'rgb(35, 209, 35)',
               pointBackgroundColor: 'rgb(35, 209, 35)',
