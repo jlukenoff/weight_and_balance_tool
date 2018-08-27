@@ -1,5 +1,5 @@
 #node_modules
-node_modules
+node_modules/
 
 #data_files
 *.csv
@@ -7,4 +7,3 @@ node_modules
 
 #bundles
 public/dist/bundle.js
-public/dist/bundle.js.map

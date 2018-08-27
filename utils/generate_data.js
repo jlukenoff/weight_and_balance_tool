@@ -12,7 +12,7 @@ const generateData = (file, index) => {
     return `${letters[random(26)]}${letters[random(26)]}${2000 - random(1000)}${letters[random(26)]}`;
   };
   const models = fs.readFileSync('data/ACFTREF.txt').toString().split('\n').map(plane => plane.split(',')[2]);
-  file.write(`${index},${getTailNumber()},${make},${models[index].trim()},${2018 - random(30)},${faker.lorem.word()},${3000 - random(1000)},${5000 - random(1000)},${500 - random(300)},${200 - random(100)},${150 - random(100)},${(100 - randomFloat(75)).toFixed(2)},${(100 - randomFloat(50)).toFixed(2)},${(100 - randomFloat(75)).toFixed(2)},${(200 - randomFloat(100)).toFixed(2)},${(150 - randomFloat(100)).toFixed(2)},${(150 - randomFloat(100)).toFixed(2)}\n`);
+  file.write(`${index},${getTailNumber()},${make},${models[index % 10].trim()},${2018 - random(30)},${faker.lorem.word()},${3000 - random(1000)},${5000 - random(1000)},${500 - random(300)},${200 - random(100)},${150 - random(100)},${(100 - randomFloat(75)).toFixed(2)},${(100 - randomFloat(50)).toFixed(2)},${(100 - randomFloat(75)).toFixed(2)},${(200 - randomFloat(100)).toFixed(2)},${(150 - randomFloat(100)).toFixed(2)},${(150 - randomFloat(100)).toFixed(2)}\n`);
 };
 
 const dataFile = fs.createWriteStream('data/data.csv');

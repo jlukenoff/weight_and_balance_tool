@@ -38,6 +38,7 @@ class App extends Component {
     this.update = this.update.bind(this);
     this.getAll = this.getAll.bind(this);
     this.handlePlaneSelect = this.handlePlaneSelect.bind(this);
+    this.getPlaneByTailNumber = this.getPlaneByTailNumber.bind(this);
   }
 
   componentDidMount() {
@@ -60,18 +61,34 @@ class App extends Component {
       }).catch(err => console.error(`error parsing response ${err}`));
   }
 
+  getPlaneByTailNumber(tailNumber) {
+    fetch(`api/plane/${tailNumber}`)
+      .then(chunk => chunk.json())
+      .then((res) => {
+        console.log(res);
+        this.setState({ ...res });
+      })
+      .catch(err => console.error(`error parsing response ${err}`));
+  }
+
   update(event, key) {
     event.preventDefault();
+    const value = +event.target.value;
     const newState = { ...this.state };
-    newState[key] = +event.target.value;
+    newState[key] = value;
     this.setState({ ...newState });
   }
 
   handlePlaneSelect(e, property) {
     e.preventDefault();
-    const newState = {...this.state};
-    newState[property] = e.target.value;
-    this.setState({...newState});
+    const { value } = e.target;
+    if (property === 'currentTailNumber') {
+      this.getPlaneByTailNumber(value);
+    } else {
+      const newState = { ...this.state };
+      newState[property] = value;
+      this.setState({ ...newState });
+    }
   }
 
   render() {

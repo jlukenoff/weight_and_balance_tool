@@ -6,8 +6,9 @@ const app = express();
 app.use(express.static('public/dist'));
 
 app.get('/api/plane/:tailNumber', (req, res) => {
+  console.log('request received');
   const { tailNumber } = req.params;
-  PlaneModel.find({ tailNumber }, (err, data) => {
+  PlaneModel.findOne({ tailNumber }, (err, data) => {
     if (err) res.end(err);
     res.send(data);
   });
