@@ -2,42 +2,97 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 import styles from './Chart.css';
 
-const Chart = () => {
+const Chart = (props) => {
+  const {
+    initial,
+    frontSeats,
+    rearSeats,
+    fuelPosition,
+    cargoPosition1,
+    cargoPosition2,
+    currrentFrontSeatWeight,
+    currentBackSeatWeight,
+    currentFuelWeight,
+    currentCargo1Weight,
+    currentCargo2Weight,
+    maxWeight,
+    maxCoG,
+    emptyWeight,
+    emptyMoment,
+    frontSeatsMoment,
+    rearSeatsMoment,
+    cargo1Moment,
+    cargo2Moment,
+  } = props;
+
+  const renderCoGByFuelWeight = fuelWeight => (
+    ((fuelWeight * fuelPosition) + emptyMoment + frontSeatsMoment + rearSeatsMoment + cargo1Moment + cargo2Moment)
+    / (fuelWeight + currentBackSeatWeight + currrentFrontSeatWeight + currentCargo1Weight + currentCargo2Weight + emptyWeight)
+  );
+  
+  const renderCoGFlight = () => {
+    // declare output array
+    const output = [];
+    let fuelWeight = currentFuelWeight;
+    for (let i = 0; i <= 10; i++) {
+      console.log(fuelWeight);
+      output.push(renderCoGByFuelWeight(fuelWeight));
+      fuelWeight -= (fuelWeight * 0.1);
+    }
+    return output;
+  };
   return (
     <div className={styles.Chart} id="CoG-Graph">
       <Line
-        height={200}
+        height={400}
         width={400}
         data={{
-          labels: [34, 36, 38, 40, 42, 44, 46],
+          labels: ['0%', '10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%'],
           datasets: [
             {
-              label: 'Weight (lbs)',
-              data: [2419],
+              label: 'Current CoG',
+              data: renderCoGFlight(),
+              fill: false,
+              borderColor: 'rgb(35, 209, 35)',
+              pointBackgroundColor: 'rgb(35, 209, 35)',
             },
             {
-              label: 'CG (inches)',
-              data: [43],
+              label: 'Max CG',
+              data: [maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG],
+              fill: false,
+              borderColor: 'rgb(247, 61, 95)',
+              pointRadius: 0,
+              pointHitRadius: 0,
             },
           ],
-          yAxesId: 'Weight (lbs)',
-          xAxesId: 'CG (inches)',
         }}
         options={{
           title: {
             display: true,
             text: 'Center of Gravity',
-            fontSize: 25,
+            fontSize: 15,
           },
           legend: {
             display: true,
-            position: 'right',
+            position: 'bottom',
           },
           maintainAspectRatio: true,
           scales: {
+            xAxes: [{
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Fuel Consumption',
+              },
+            }],
             yAxes: [{
+              display: true,
               ticks: {
-                beginAtZero: true,
+                min: frontSeats - 2,
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'CG (inches)',
               },
             }],
           },
