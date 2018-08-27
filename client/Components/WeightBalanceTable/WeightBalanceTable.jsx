@@ -25,12 +25,6 @@ cargoPosition2: 112.53999999999999, */
 
 const WeightBalanceTable = (props) => {
   const {
-    id,
-    tailNumber,
-    make,
-    model,
-    year,
-    equipment,
     emptyWeight,
     maxWeight,
     maxFuel,
@@ -50,6 +44,7 @@ const WeightBalanceTable = (props) => {
     update,
   } = props;
 
+  const totalWeight = currentBackSeatWeight + currentFuelWeight + currrentFrontSeatWeight + currentCargo1Weight + currentCargo2Weight;
   return (
     <div id="Weight-and-Balance-Table-Container" className={styles.container}>
       <div id="table-header" className={styles.row}>
@@ -78,8 +73,8 @@ const WeightBalanceTable = (props) => {
             onChange={(e) => { update(e, 'currrentFrontSeatWeight'); }}
           />
         </div>
-        <div className={`max ${styles.cell}`} />
-        <div className={`delta ${styles.cell}`} />
+        <div className={`max ${styles.cell}`}><i>N/A</i></div>
+        <div className={`delta ${styles.cell}`}><i>N/A</i></div>
         <div className={`arm ${styles.cell}`}>{frontSeats}</div>
         <div className={`moment ${styles.cell}`}>{Math.round(currrentFrontSeatWeight * frontSeats) || 0}</div>
       </div>
@@ -93,8 +88,8 @@ const WeightBalanceTable = (props) => {
             onChange={(e) => { update(e, 'currentBackSeatWeight'); }}
           />
         </div>
-        <div className={`max ${styles.cell}`} />
-        <div className={`delta ${styles.cell}`} />
+        <div className={`max ${styles.cell}`}><i>N/A</i></div>
+        <div className={`delta ${styles.cell}`}><i>N/A</i></div>
         <div className={`arm ${styles.cell}`}>{rearSeats}</div>
         <div className={`moment ${styles.cell}`}>{Math.round(currentBackSeatWeight * rearSeats) || 0}</div>
       </div>
@@ -102,7 +97,7 @@ const WeightBalanceTable = (props) => {
         <div className={`item ${styles.cell}`}>
           Fuel
           <br />
-          (tabs = 35gal)
+          (6 lbs / gal)
         </div>
         <div className={`weight ${styles.cell}`}>
           <input
@@ -111,10 +106,15 @@ const WeightBalanceTable = (props) => {
             id="fuel-weight-input"
             onChange={(e) => { update(e, 'currentFuelWeight'); }}
           />
-          (35.0/gal)
+          <br />
+          {`(${(currentFuelWeight / 6).toFixed(1)} gal)`}
         </div>
-        <div className={`max ${styles.cell}`}>{maxFuel}</div>
-        <div className={`delta ${styles.cell}`} />
+        <div className={`max ${styles.cell}`}>
+          {maxFuel}
+          <br />
+          {`(${(maxFuel / 6).toFixed(1)} gal)`}
+        </div>
+        <div className={`delta ${styles.cell}`}>{Math.round(maxFuel - currentFuelWeight) || ''}</div>
         <div className={`arm ${styles.cell}`}>{fuelPosition}</div>
         <div className={`moment ${styles.cell}`}>{Math.round(currentFuelWeight * maxFuel) || 0}</div>
       </div>
@@ -151,15 +151,15 @@ const WeightBalanceTable = (props) => {
       <div id="total" className={`${styles.row} ${styles.total}`}>
         <div className={`item ${styles.cell}`}>Total</div>
         <div className={`weight ${styles.cell}`}>
-          {currentBackSeatWeight + currentFuelWeight + currrentFrontSeatWeight + currentCargo1Weight + currentCargo2Weight}
+          {totalWeight}
         </div>
         <div className={`max ${styles.cell}`}>{maxWeight}</div>
-        <div className={`delta ${styles.cell}`}>&Delta;</div>
-        <div className={`arm ${styles.cell}`}>Arm</div>
-        <div className={`moment ${styles.cell}`}>Moment</div>
+        <div className={`delta ${styles.cell}`}>{maxWeight - totalWeight}</div>
+        <div className={`arm ${styles.cell}`}>{initial}</div>
+        <div className={`moment ${styles.cell}`}>{Math.round(totalWeight * initial)}</div>
       </div>
     </div>
   );
-}
+};
 
 export default WeightBalanceTable;
