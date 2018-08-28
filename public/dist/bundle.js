@@ -86,15 +86,144 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./client/Components/Chart/Chart.css":
+/***/ "./client/Components/Chart/Chart.jsx":
 /*!*******************************************!*\
-  !*** ./client/Components/Chart/Chart.css ***!
+  !*** ./client/Components/Chart/Chart.jsx ***!
   \*******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
 
-var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--5!./Chart.css */ "./node_modules/css-loader/index.js?!./client/Components/Chart/Chart.css");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactChartjs = __webpack_require__(/*! react-chartjs-2 */ "./node_modules/react-chartjs-2/es/index.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var Chart = function Chart(props) {
+  var initial = props.initial,
+      frontSeats = props.frontSeats,
+      rearSeats = props.rearSeats,
+      fuelPosition = props.fuelPosition,
+      cargoPosition1 = props.cargoPosition1,
+      cargoPosition2 = props.cargoPosition2,
+      currrentFrontSeatWeight = props.currrentFrontSeatWeight,
+      currentBackSeatWeight = props.currentBackSeatWeight,
+      currentFuelWeight = props.currentFuelWeight,
+      currentCargo1Weight = props.currentCargo1Weight,
+      currentCargo2Weight = props.currentCargo2Weight,
+      maxWeight = props.maxWeight,
+      maxCoG = props.maxCoG,
+      emptyWeight = props.emptyWeight,
+      emptyMoment = props.emptyMoment,
+      frontSeatsMoment = props.frontSeatsMoment,
+      rearSeatsMoment = props.rearSeatsMoment,
+      cargo1Moment = props.cargo1Moment,
+      cargo2Moment = props.cargo2Moment,
+      exceedsBoundary = props.exceedsBoundary,
+      toggleMessage = props.toggleMessage;
+
+
+  var renderCoGByFuelWeight = function renderCoGByFuelWeight(fuelWeight) {
+    return (fuelWeight * fuelPosition + emptyMoment + frontSeatsMoment + rearSeatsMoment + cargo1Moment + cargo2Moment) / (fuelWeight + currentBackSeatWeight + currrentFrontSeatWeight + currentCargo1Weight + currentCargo2Weight + emptyWeight);
+  };
+
+  var renderCoGFlight = function renderCoGFlight() {
+    // declare output array
+    var output = [];
+    var fuelWeight = currentFuelWeight;
+    for (var i = 0; i <= 10; i++) {
+      output.push(renderCoGByFuelWeight(fuelWeight));
+      fuelWeight -= fuelWeight * 0.1;
+    }
+    return output;
+  };
+  var flightPlan = renderCoGFlight();
+
+  if (!exceedsBoundary && (flightPlan[flightPlan.length - 1] > maxCoG || flightPlan[0] > maxCoG) || exceedsBoundary && (flightPlan[flightPlan.length - 1] < maxCoG || flightPlan[0] < maxCoG)) {
+    toggleMessage();
+  }
+  return _react2['default'].createElement(
+    'div',
+    { id: 'CoG-Graph' },
+    _react2['default'].createElement(_reactChartjs.Line, {
+      height: 400,
+      width: 400,
+      data: {
+        labels: ['0%', '10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%'],
+        datasets: [{
+          label: 'Current',
+          data: flightPlan,
+          fill: false,
+          borderColor: 'rgb(35, 209, 35)',
+          backgroundColor: 'rgb(35, 209, 35)',
+          pointBackgroundColor: 'rgb(35, 209, 35)'
+        }, {
+          label: 'Max',
+          data: [maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG],
+          fill: false,
+          borderColor: 'rgb(247, 61, 95)',
+          backgroundColor: 'rgb(247, 61, 95)',
+          pointRadius: 0,
+          pointHitRadius: 0
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'Center of Gravity',
+          fontSize: 15
+        },
+        legend: {
+          display: true,
+          position: 'top'
+        },
+        maintainAspectRatio: true,
+        scales: {
+          xAxes: [{
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Fuel Consumption'
+            }
+          }],
+          yAxes: [{
+            display: true,
+            ticks: {
+              min: frontSeats - 2
+            },
+            scaleLabel: {
+              display: true,
+              labelString: 'CG (inches)'
+            }
+          }]
+        }
+      }
+    })
+  );
+};
+
+exports['default'] = Chart;
+
+/***/ }),
+
+/***/ "./client/Components/Message/Message.css":
+/*!***********************************************!*\
+  !*** ./client/Components/Message/Message.css ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--5!./Message.css */ "./node_modules/css-loader/index.js?!./client/Components/Message/Message.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -116,10 +245,10 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./client/Components/Chart/Chart.jsx":
-/*!*******************************************!*\
-  !*** ./client/Components/Chart/Chart.jsx ***!
-  \*******************************************/
+/***/ "./client/Components/Message/Message.jsx":
+/*!***********************************************!*\
+  !*** ./client/Components/Message/Message.jsx ***!
+  \***********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -134,57 +263,31 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactChartjs = __webpack_require__(/*! react-chartjs-2 */ "./node_modules/react-chartjs-2/es/index.js");
+var _Message = __webpack_require__(/*! ./Message.css */ "./client/Components/Message/Message.css");
 
-var _Chart = __webpack_require__(/*! ./Chart.css */ "./client/Components/Chart/Chart.css");
-
-var _Chart2 = _interopRequireDefault(_Chart);
+var _Message2 = _interopRequireDefault(_Message);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var Chart = function Chart() {
+var Message = function Message(props) {
+  var exceedsBoundary = props.exceedsBoundary;
+
   return _react2['default'].createElement(
     'div',
-    { className: _Chart2['default'].Chart, id: 'CoG-Graph' },
-    _react2['default'].createElement(_reactChartjs.Line, {
-      height: 200,
-      width: 400,
-      data: {
-        labels: [34, 36, 38, 40, 42, 44, 46],
-        datasets: [{
-          label: 'Weight (lbs)',
-          data: [2419]
-        }, {
-          label: 'CG (inches)',
-          data: [43]
-        }],
-        yAxesId: 'Weight (lbs)',
-        xAxesId: 'CG (inches)'
-      },
-      options: {
-        title: {
-          display: true,
-          text: 'Center of Gravity',
-          fontSize: 25
-        },
-        legend: {
-          display: true,
-          position: 'right'
-        },
-        maintainAspectRatio: true,
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
-      }
-    })
+    { className: _Message2['default'].msgContainer },
+    exceedsBoundary ? _react2['default'].createElement(
+      'div',
+      { style: { backgroundColor: 'red', color: 'white' } },
+      'Warning: maximum center of gravity exceeded'
+    ) : _react2['default'].createElement(
+      'div',
+      { style: { backgroundColor: 'rgb(35, 209, 35)' } },
+      'Center of Gravity within valid range.'
+    )
   );
 };
 
-exports['default'] = Chart;
+exports['default'] = Message;
 
 /***/ }),
 
@@ -260,7 +363,7 @@ var PlaneSelect = function PlaneSelect(props) {
           }
 
           return onChange;
-        }() },
+        }(), selected: currentMake },
       _react2['default'].createElement(
         'option',
         { value: '' },
@@ -269,7 +372,7 @@ var PlaneSelect = function PlaneSelect(props) {
       Object.keys(allPlanesByMake).map(function (make) {
         return _react2['default'].createElement(
           'option',
-          { value: make, selected: currentMake === make },
+          { value: make },
           make
         );
       })
@@ -282,39 +385,41 @@ var PlaneSelect = function PlaneSelect(props) {
           }
 
           return onChange;
-        }() },
+        }(), selected: currentModel },
       _react2['default'].createElement(
         'option',
         { value: '' },
         'Select a Model'
       ),
-      currentModel === '' || allPlanesByMake[currentModel].map(function (make) {
+      currentMake === '' || allPlanesByMake[currentMake].map(function (plane) {
         return _react2['default'].createElement(
           'option',
-          { value: make, selected: currentMake === make },
-          make
+          { value: plane.model },
+          plane.model
         );
       })
     ),
     _react2['default'].createElement(
       'select',
-      { name: 'Select Make', id: 'make-select', value: currentMake, onChange: function () {
+      { name: 'Select Tail Number', id: 'tail-number-select', value: currentTailNumber, onChange: function () {
           function onChange(e) {
             return handleSelect(e, 'currentTailNumber');
           }
 
           return onChange;
-        }() },
+        }(), selected: currentTailNumber },
       _react2['default'].createElement(
         'option',
         { value: '' },
-        'Select a Make'
+        'Select a Tail Number'
       ),
-      Object.keys(allPlanesByMake).map(function (make) {
+      currentModel === '' || allPlanesByMake[currentMake].filter(function (plane) {
+        return plane.model === currentModel;
+      }).map(function (plane) {
         return _react2['default'].createElement(
           'option',
-          { value: make, selected: currentMake === make },
-          make
+          { value: plane.tailNumber },
+          plane.tailNumber
         );
       })
     )
@@ -379,36 +484,8 @@ var _WeightBalanceTable2 = _interopRequireDefault(_WeightBalanceTable);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-/* id: 100,
-tailNumber: 1541,
-make: 'Beachcraft',
-model: 'reprehenderit',
-year: 1996,
-equipment: 'fugit',
-emptyWeight: 2248,
-maxWeight: 4797,
-maxFuel: 452,
-cargoWeight1: 194,
-cargoWeight2: 133,
-initial: 72.51,
-frontSeats: 79.08,
-rearSeats: 41.78,
-fuelPosition: 108.39,
-cargoPosition1: 125.97,
-cargoPosition2: 112.53999999999999, */
-
-// weight * arm = moment;
-// moment / weight = CoG;
-// weight - emptyWeight = delta
-
 var WeightBalanceTable = function WeightBalanceTable(props) {
-  var id = props.id,
-      tailNumber = props.tailNumber,
-      make = props.make,
-      model = props.model,
-      year = props.year,
-      equipment = props.equipment,
-      emptyWeight = props.emptyWeight,
+  var emptyWeight = props.emptyWeight,
       maxWeight = props.maxWeight,
       maxFuel = props.maxFuel,
       cargoWeight1 = props.cargoWeight1,
@@ -424,15 +501,24 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
       currentFuelWeight = props.currentFuelWeight,
       currentCargo1Weight = props.currentCargo1Weight,
       currentCargo2Weight = props.currentCargo2Weight,
-      update = props.update;
+      update = props.update,
+      emptyMoment = props.emptyMoment,
+      frontSeatsMoment = props.frontSeatsMoment,
+      rearSeatsMoment = props.rearSeatsMoment,
+      fuelMoment = props.fuelMoment,
+      cargo1Moment = props.cargo1Moment,
+      cargo2Moment = props.cargo2Moment;
 
+
+  var totalWeight = currentBackSeatWeight + currentFuelWeight + currrentFrontSeatWeight + currentCargo1Weight + currentCargo2Weight + emptyWeight;
+  var totalMoment = emptyMoment + frontSeatsMoment + rearSeatsMoment + fuelMoment + cargo1Moment + cargo2Moment;
 
   return _react2['default'].createElement(
     'div',
     { id: 'Weight-and-Balance-Table-Container', className: _WeightBalanceTable2['default'].container },
     _react2['default'].createElement(
       'div',
-      { id: 'table-header', className: _WeightBalanceTable2['default'].row },
+      { id: 'table-header', className: String(_WeightBalanceTable2['default'].row) + ' ' + String(_WeightBalanceTable2['default'].bold) },
       _react2['default'].createElement(
         'div',
         { className: 'item ' + String(_WeightBalanceTable2['default'].cell) },
@@ -475,7 +561,7 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
       _react2['default'].createElement(
         'div',
         { className: 'weight ' + String(_WeightBalanceTable2['default'].cell) },
-        emptyWeight
+        emptyWeight.toFixed(2)
       ),
       _react2['default'].createElement(
         'div',
@@ -495,7 +581,7 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
       _react2['default'].createElement(
         'div',
         { className: 'moment ' + String(_WeightBalanceTable2['default'].cell) },
-        Math.round(emptyWeight * initial)
+        emptyMoment
       )
     ),
     _react2['default'].createElement(
@@ -522,8 +608,24 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
           }()
         })
       ),
-      _react2['default'].createElement('div', { className: 'max ' + String(_WeightBalanceTable2['default'].cell) }),
-      _react2['default'].createElement('div', { className: 'delta ' + String(_WeightBalanceTable2['default'].cell) }),
+      _react2['default'].createElement(
+        'div',
+        { className: 'max ' + String(_WeightBalanceTable2['default'].cell) },
+        _react2['default'].createElement(
+          'i',
+          null,
+          'N/A'
+        )
+      ),
+      _react2['default'].createElement(
+        'div',
+        { className: 'delta ' + String(_WeightBalanceTable2['default'].cell) },
+        _react2['default'].createElement(
+          'i',
+          null,
+          'N/A'
+        )
+      ),
       _react2['default'].createElement(
         'div',
         { className: 'arm ' + String(_WeightBalanceTable2['default'].cell) },
@@ -532,7 +634,7 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
       _react2['default'].createElement(
         'div',
         { className: 'moment ' + String(_WeightBalanceTable2['default'].cell) },
-        Math.round(currrentFrontSeatWeight * frontSeats) || 0
+        frontSeatsMoment || 0
       )
     ),
     _react2['default'].createElement(
@@ -559,8 +661,24 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
           }()
         })
       ),
-      _react2['default'].createElement('div', { className: 'max ' + String(_WeightBalanceTable2['default'].cell) }),
-      _react2['default'].createElement('div', { className: 'delta ' + String(_WeightBalanceTable2['default'].cell) }),
+      _react2['default'].createElement(
+        'div',
+        { className: 'max ' + String(_WeightBalanceTable2['default'].cell) },
+        _react2['default'].createElement(
+          'i',
+          null,
+          'N/A'
+        )
+      ),
+      _react2['default'].createElement(
+        'div',
+        { className: 'delta ' + String(_WeightBalanceTable2['default'].cell) },
+        _react2['default'].createElement(
+          'i',
+          null,
+          'N/A'
+        )
+      ),
       _react2['default'].createElement(
         'div',
         { className: 'arm ' + String(_WeightBalanceTable2['default'].cell) },
@@ -569,7 +687,7 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
       _react2['default'].createElement(
         'div',
         { className: 'moment ' + String(_WeightBalanceTable2['default'].cell) },
-        Math.round(currentBackSeatWeight * rearSeats) || 0
+        rearSeatsMoment || 0
       )
     ),
     _react2['default'].createElement(
@@ -580,7 +698,7 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
         { className: 'item ' + String(_WeightBalanceTable2['default'].cell) },
         'Fuel',
         _react2['default'].createElement('br', null),
-        '(tabs = 35gal)'
+        '(6 lbs / gal)'
       ),
       _react2['default'].createElement(
         'div',
@@ -597,14 +715,21 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
             return onChange;
           }()
         }),
-        '(35.0/gal)'
+        _react2['default'].createElement('br', null),
+        '(' + String((currentFuelWeight / 6).toFixed(1)) + ' gal)'
       ),
       _react2['default'].createElement(
         'div',
         { className: 'max ' + String(_WeightBalanceTable2['default'].cell) },
-        maxFuel
+        maxFuel,
+        _react2['default'].createElement('br', null),
+        '(' + String((maxFuel / 6).toFixed(1)) + ' gal)'
       ),
-      _react2['default'].createElement('div', { className: 'delta ' + String(_WeightBalanceTable2['default'].cell) }),
+      _react2['default'].createElement(
+        'div',
+        { className: 'delta ' + String(_WeightBalanceTable2['default'].cell) },
+        Math.round(maxFuel - currentFuelWeight) || ''
+      ),
       _react2['default'].createElement(
         'div',
         { className: 'arm ' + String(_WeightBalanceTable2['default'].cell) },
@@ -613,7 +738,7 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
       _react2['default'].createElement(
         'div',
         { className: 'moment ' + String(_WeightBalanceTable2['default'].cell) },
-        Math.round(currentFuelWeight * maxFuel) || 0
+        fuelMoment || 0
       )
     ),
     _react2['default'].createElement(
@@ -648,7 +773,7 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
       _react2['default'].createElement(
         'div',
         { className: 'delta ' + String(_WeightBalanceTable2['default'].cell) },
-        Math.round(cargoWeight1 - currentCargo1Weight) || ''
+        Math.round(cargoWeight1 - currentCargo1Weight) || 0
       ),
       _react2['default'].createElement(
         'div',
@@ -658,7 +783,7 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
       _react2['default'].createElement(
         'div',
         { className: 'moment ' + String(_WeightBalanceTable2['default'].cell) },
-        Math.round(currentCargo1Weight * cargoPosition1) || 0
+        cargo1Moment || 0
       )
     ),
     _react2['default'].createElement(
@@ -693,7 +818,7 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
       _react2['default'].createElement(
         'div',
         { className: 'delta ' + String(_WeightBalanceTable2['default'].cell) },
-        Math.round(cargoWeight2 - currentCargo2Weight) || ''
+        Math.round(cargoWeight2 - currentCargo2Weight) || 0
       ),
       _react2['default'].createElement(
         'div',
@@ -703,12 +828,12 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
       _react2['default'].createElement(
         'div',
         { className: 'moment ' + String(_WeightBalanceTable2['default'].cell) },
-        Math.round(currentCargo2Weight * cargoPosition2) || 0
+        cargo2Moment || 0
       )
     ),
     _react2['default'].createElement(
       'div',
-      { id: 'total', className: String(_WeightBalanceTable2['default'].row) + ' ' + String(_WeightBalanceTable2['default'].total) },
+      { id: 'total', className: String(_WeightBalanceTable2['default'].row) + ' ' + String(_WeightBalanceTable2['default'].bold) },
       _react2['default'].createElement(
         'div',
         { className: 'item ' + String(_WeightBalanceTable2['default'].cell) },
@@ -717,7 +842,7 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
       _react2['default'].createElement(
         'div',
         { className: 'weight ' + String(_WeightBalanceTable2['default'].cell) },
-        currentBackSeatWeight + currentFuelWeight + currrentFrontSeatWeight + currentCargo1Weight + currentCargo2Weight
+        totalWeight
       ),
       _react2['default'].createElement(
         'div',
@@ -727,23 +852,53 @@ var WeightBalanceTable = function WeightBalanceTable(props) {
       _react2['default'].createElement(
         'div',
         { className: 'delta ' + String(_WeightBalanceTable2['default'].cell) },
-        '\u0394'
+        maxWeight - totalWeight
       ),
       _react2['default'].createElement(
         'div',
         { className: 'arm ' + String(_WeightBalanceTable2['default'].cell) },
-        'Arm'
+        (totalMoment / totalWeight).toFixed(2)
       ),
       _react2['default'].createElement(
         'div',
         { className: 'moment ' + String(_WeightBalanceTable2['default'].cell) },
-        'Moment'
+        Math.round(totalMoment / initial)
       )
     )
   );
 };
 
 exports['default'] = WeightBalanceTable;
+
+/***/ }),
+
+/***/ "./client/index.css":
+/*!**************************!*\
+  !*** ./client/index.css ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../node_modules/css-loader??ref--5!./index.css */ "./node_modules/css-loader/index.js?!./client/index.css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
 
 /***/ }),
 
@@ -781,6 +936,14 @@ var _PlaneSelect = __webpack_require__(/*! ./Components/PlaneSelect/PlaneSelect 
 
 var _PlaneSelect2 = _interopRequireDefault(_PlaneSelect);
 
+var _Message = __webpack_require__(/*! ./Components/Message/Message */ "./client/Components/Message/Message.jsx");
+
+var _Message2 = _interopRequireDefault(_Message);
+
+var _index = __webpack_require__(/*! ./index.css */ "./client/index.css");
+
+var _index2 = _interopRequireDefault(_index);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -799,22 +962,23 @@ var App = function (_Component) {
 
     _this.state = {
       id: 100,
-      tailNumber: 1541,
-      make: 'Beachcraft',
-      model: 'reprehenderit',
+      tailNumber: 'N1004E',
+      make: 'Cessna',
+      model: '172SP',
       year: 1996,
       equipment: 'fugit',
-      emptyWeight: 2248,
-      maxWeight: 4797,
-      maxFuel: 452,
-      cargoWeight1: 194,
-      cargoWeight2: 133,
-      initial: 72.51,
-      frontSeats: 79.08,
-      rearSeats: 41.78,
-      fuelPosition: 108.39,
-      cargoPosition1: 125.97,
-      cargoPosition2: 112.53,
+      emptyWeight: 1748.5,
+      maxWeight: 2550,
+      maxCoG: 45.25,
+      maxFuel: 53 * 6,
+      cargoWeight1: 120,
+      cargoWeight2: 50,
+      initial: 41.86,
+      frontSeats: 37,
+      rearSeats: 73,
+      fuelPosition: 48,
+      cargoPosition1: 95.00,
+      cargoPosition2: 123.00,
       currrentFrontSeatWeight: 0,
       currentBackSeatWeight: 0,
       currentFuelWeight: 0,
@@ -823,11 +987,14 @@ var App = function (_Component) {
       allPlanesByMake: {},
       currentMake: '',
       currentModel: '',
-      currentTailNumber: ''
+      currentTailNumber: '',
+      exceedsBoundary: false
     };
     _this.update = _this.update.bind(_this);
     _this.getAll = _this.getAll.bind(_this);
     _this.handlePlaneSelect = _this.handlePlaneSelect.bind(_this);
+    _this.getPlaneByTailNumber = _this.getPlaneByTailNumber.bind(_this);
+    _this.toggleMessage = _this.toggleMessage.bind(_this);
     return _this;
   }
 
@@ -866,12 +1033,31 @@ var App = function (_Component) {
       return getAll;
     }()
   }, {
+    key: 'getPlaneByTailNumber',
+    value: function () {
+      function getPlaneByTailNumber(tailNumber) {
+        var _this3 = this;
+
+        fetch('api/plane/' + String(tailNumber)).then(function (chunk) {
+          return chunk.json();
+        }).then(function (res) {
+          console.log(res);
+          _this3.setState(Object.assign({}, res));
+        })['catch'](function (err) {
+          return console.error('error parsing response ' + String(err));
+        });
+      }
+
+      return getPlaneByTailNumber;
+    }()
+  }, {
     key: 'update',
     value: function () {
       function update(event, key) {
         event.preventDefault();
+        var value = +event.target.value;
         var newState = Object.assign({}, this.state);
-        newState[key] = +event.target.value;
+        newState[key] = value;
         this.setState(Object.assign({}, newState));
       }
 
@@ -882,25 +1068,69 @@ var App = function (_Component) {
     value: function () {
       function handlePlaneSelect(e, property) {
         e.preventDefault();
-        var newState = Object.assign({}, this.state);
-        newState[property] = e.target.value;
-        this.setState(Object.assign({}, newState));
+        var value = e.target.value;
+
+        if (property === 'currentTailNumber') {
+          this.getPlaneByTailNumber(value);
+        } else {
+          var newState = Object.assign({}, this.state);
+          newState[property] = value;
+          this.setState(Object.assign({}, newState));
+        }
       }
 
       return handlePlaneSelect;
     }()
   }, {
+    key: 'toggleMessage',
+    value: function () {
+      function toggleMessage() {
+        var exceedsBoundary = this.state.exceedsBoundary;
+
+        exceedsBoundary = !exceedsBoundary;
+        this.setState({ exceedsBoundary: exceedsBoundary });
+      }
+
+      return toggleMessage;
+    }()
+  }, {
     key: 'render',
     value: function () {
       function render() {
+        var _state = this.state,
+            currrentFrontSeatWeight = _state.currrentFrontSeatWeight,
+            currentBackSeatWeight = _state.currentBackSeatWeight,
+            currentFuelWeight = _state.currentFuelWeight,
+            currentCargo1Weight = _state.currentCargo1Weight,
+            currentCargo2Weight = _state.currentCargo2Weight,
+            emptyWeight = _state.emptyWeight,
+            initial = _state.initial,
+            frontSeats = _state.frontSeats,
+            rearSeats = _state.rearSeats,
+            fuelPosition = _state.fuelPosition,
+            cargoPosition1 = _state.cargoPosition1,
+            cargoPosition2 = _state.cargoPosition2;
+
+        var CoGData = {
+          emptyMoment: Math.ceil(emptyWeight * initial),
+          frontSeatsMoment: Math.ceil(currrentFrontSeatWeight * frontSeats),
+          rearSeatsMoment: Math.ceil(currentBackSeatWeight * rearSeats),
+          cargo1Moment: Math.ceil(currentCargo1Weight * cargoPosition1),
+          cargo2Moment: Math.ceil(currentCargo2Weight * cargoPosition2),
+          fuelMoment: Math.ceil(currentFuelWeight * fuelPosition)
+        };
+
         return _react2['default'].createElement(
           'div',
-          null,
+          { className: _index2['default'].appContainer },
           _react2['default'].createElement(_PlaneSelect2['default'], _extends({}, this.state, { handleSelect: this.handlePlaneSelect })),
-          _react2['default'].createElement(_WeightBalanceTable2['default'], _extends({}, this.state, {
+          _react2['default'].createElement(_WeightBalanceTable2['default'], _extends({}, this.state, CoGData, {
             update: this.update
           })),
-          _react2['default'].createElement(_Chart2['default'], null)
+          _react2['default'].createElement(_Message2['default'], _extends({}, this.state, CoGData)),
+          _react2['default'].createElement(_Chart2['default'], _extends({}, this.state, CoGData, {
+            toggleMessage: this.toggleMessage
+          }))
         );
       }
 
@@ -15846,10 +16076,10 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js?!./client/Components/Chart/Chart.css":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--5!./client/Components/Chart/Chart.css ***!
-  \*****************************************************************************/
+/***/ "./node_modules/css-loader/index.js?!./client/Components/Message/Message.css":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--5!./client/Components/Message/Message.css ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15858,12 +16088,11 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".Chart__envelope___2MpWb {\n  /* position: absolute;\n  top: inherit;\n  left: inherit;\n  margin-top: 7%;\n  margin-left: 6%;\n  opacity: 0.7;\n  border-bottom: 435px solid #125284;\n  border-left: 50px solid transparent;\n  height: 0;\n  width: 100px; */\n}\n\n.Chart__Chart___ijqBy {\n  width: 50%;\n}", ""]);
+exports.push([module.i, ".Message__msgContainer___2mKbJ {\n  border: 1px solid black;\n  width: 100%;\n  text-align: center;\n  margin: 20px 0;\n  padding: 10px;\n}", ""]);
 
 // exports
 exports.locals = {
-	"envelope": "Chart__envelope___2MpWb",
-	"Chart": "Chart__Chart___ijqBy"
+	"msgContainer": "Message__msgContainer___2mKbJ"
 };
 
 /***/ }),
@@ -15899,15 +16128,36 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".WeightBalanceTable__container___2Glge {\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n  padding: 10px;\n  width: 700px;\n  height: 250px;\n  border: 1px solid black;\n}\n\n.WeightBalanceTable__row___3hXgz {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n}\n\n.WeightBalanceTable__total___1NwVP {\n  font-weight: bold;\n}\n\n.WeightBalanceTable__cell___2qlqd {\n  width: 100px;\n}\n\n.WeightBalanceTable__userInput___1j6FI {\n  width: 50px;\n}", ""]);
+exports.push([module.i, ".WeightBalanceTable__container___2Glge {\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n  padding: 10px;\n  width: 100%;\n  height: 250px;\n  border: 1px solid black;\n}\n\n.WeightBalanceTable__row___3hXgz {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n}\n\n.WeightBalanceTable__bold___1J0Vh {\n  font-weight: bold;\n}\n\n.WeightBalanceTable__cell___2qlqd {\n  width: 100px;\n}\n\n.WeightBalanceTable__userInput___1j6FI {\n  width: 50px;\n}", ""]);
 
 // exports
 exports.locals = {
 	"container": "WeightBalanceTable__container___2Glge",
 	"row": "WeightBalanceTable__row___3hXgz",
-	"total": "WeightBalanceTable__total___1NwVP",
+	"bold": "WeightBalanceTable__bold___1J0Vh",
 	"cell": "WeightBalanceTable__cell___2qlqd",
 	"userInput": "WeightBalanceTable__userInput___1j6FI"
+};
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./client/index.css":
+/*!************************************************************!*\
+  !*** ./node_modules/css-loader??ref--5!./client/index.css ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".index__appContainer___-aXHi {\n  margin: 2% 25%;\n}", ""]);
+
+// exports
+exports.locals = {
+	"appContainer": "index__appContainer___-aXHi"
 };
 
 /***/ }),

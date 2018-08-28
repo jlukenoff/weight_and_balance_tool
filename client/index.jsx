@@ -4,6 +4,7 @@ import Chart from './Components/Chart/Chart';
 import WeightBalanceTable from './Components/WeightBalanceTable/WeightBalanceTable';
 import PlaneSelect from './Components/PlaneSelect/PlaneSelect';
 import Message from './Components/Message/Message';
+import styles from './index.css';
 
 class App extends Component {
   constructor(props) {
@@ -126,7 +127,7 @@ class App extends Component {
     };
 
     return (
-      <div>
+      <div className={styles.appContainer}>
         <PlaneSelect {...this.state} handleSelect={this.handlePlaneSelect} />
         <WeightBalanceTable
           {...this.state}

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import styles from './Chart.css';
 
 const Chart = (props) => {
   const {
@@ -37,7 +36,6 @@ const Chart = (props) => {
     const output = [];
     let fuelWeight = currentFuelWeight;
     for (let i = 0; i <= 10; i++) {
-      console.log(fuelWeight);
       output.push(renderCoGByFuelWeight(fuelWeight));
       fuelWeight -= (fuelWeight * 0.1);
     }
@@ -51,7 +49,7 @@ const Chart = (props) => {
     toggleMessage();
   }
   return (
-    <div className={styles.Chart} id="CoG-Graph">
+    <div id="CoG-Graph">
       <Line
         height={400}
         width={400}
@@ -59,17 +57,19 @@ const Chart = (props) => {
           labels: ['0%', '10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%'],
           datasets: [
             {
-              label: 'Current CoG',
+              label: 'Current',
               data: flightPlan,
               fill: false,
               borderColor: 'rgb(35, 209, 35)',
+              backgroundColor: 'rgb(35, 209, 35)',
               pointBackgroundColor: 'rgb(35, 209, 35)',
             },
             {
-              label: 'Max CG',
+              label: 'Max',
               data: [maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG, maxCoG],
               fill: false,
               borderColor: 'rgb(247, 61, 95)',
+              backgroundColor: 'rgb(247, 61, 95)',
               pointRadius: 0,
               pointHitRadius: 0,
             },
@@ -83,7 +83,7 @@ const Chart = (props) => {
           },
           legend: {
             display: true,
-            position: 'bottom',
+            position: 'top',
           },
           maintainAspectRatio: true,
           scales: {

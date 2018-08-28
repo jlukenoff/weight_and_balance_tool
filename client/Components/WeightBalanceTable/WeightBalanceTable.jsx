@@ -1,28 +1,6 @@
 import React from 'react';
 import styles from './WeightBalanceTable.css';
 
-/* id: 100,
-tailNumber: 1541,
-make: 'Beachcraft',
-model: 'reprehenderit',
-year: 1996,
-equipment: 'fugit',
-emptyWeight: 2248,
-maxWeight: 4797,
-maxFuel: 452,
-cargoWeight1: 194,
-cargoWeight2: 133,
-initial: 72.51,
-frontSeats: 79.08,
-rearSeats: 41.78,
-fuelPosition: 108.39,
-cargoPosition1: 125.97,
-cargoPosition2: 112.53999999999999, */
-
-// weight * arm = moment;
-// moment / weight = CoG;
-// weight - emptyWeight = delta
-
 const WeightBalanceTable = (props) => {
   const {
     emptyWeight,
@@ -55,7 +33,7 @@ const WeightBalanceTable = (props) => {
 
   return (
     <div id="Weight-and-Balance-Table-Container" className={styles.container}>
-      <div id="table-header" className={styles.row}>
+      <div id="table-header" className={`${styles.row} ${styles.bold}`}>
         <div className={`item ${styles.cell}`}>Item</div>
         <div className={`weight ${styles.cell}`}>Weight (lbs)</div>
         <div className={`max ${styles.cell}`}>Max</div>
@@ -156,7 +134,7 @@ const WeightBalanceTable = (props) => {
         <div className={`arm ${styles.cell}`}>{cargoPosition2}</div>
         <div className={`moment ${styles.cell}`}>{cargo2Moment || 0}</div>
       </div>
-      <div id="total" className={`${styles.row} ${styles.total}`}>
+      <div id="total" className={`${styles.row} ${styles.bold}`}>
         <div className={`item ${styles.cell}`}>Total</div>
         <div className={`weight ${styles.cell}`}>
           {totalWeight}
